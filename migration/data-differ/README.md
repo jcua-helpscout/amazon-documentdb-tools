@@ -13,7 +13,6 @@ This tool performs the following checks:
 
  - Python 3.8
  - Modules: pymongo, deepdiff, tqdm
- - DocumentDB - disable the TLS
 ```
   "/opt/homebrew/Cellar/python@3.8/3.8.18_2/bin/python3.8" -m venv venv_3_8
   . venv_3_8/bin/activate
