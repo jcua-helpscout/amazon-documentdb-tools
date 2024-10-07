@@ -17,7 +17,7 @@ def connect_to_docdb(uri):
      A pymongo.MongoClient object.
     """
     if "replicaSet=rs0" in uri:
-        uri = uri.replace("replicaSet=rs0", "directConnection=true")
+        uri = uri.replace("replicaSet=rs0", "connect=true")
 
     client = MongoClient(host=uri,appname='ddbstat')
     db = client.admin
