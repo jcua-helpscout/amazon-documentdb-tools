@@ -81,7 +81,7 @@ def display_server_stats(previous_stats, current_stats, header_interval_counter,
         'Command': (current_stats['opcounters']['command'] - previous_stats['opcounters']['command']) / polling_interval,
         'CursorsTotal': current_stats['metrics']['cursor']['open']['total'],
         'CursorsNoTimeout': current_stats['metrics']['cursor']['open']['noTimeout'],
-        'Transactions': current_stats['transactions']['currentActive'],
+        'Transactions': current_stats.get('transactions', {}).get('currentActive', 'N/A'),
         'Timestamp': current_stats['localTime']
     }
 
