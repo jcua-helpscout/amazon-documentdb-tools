@@ -115,8 +115,12 @@ def write_difference_to_file(output_file, content):
 
 
 def compare_collections(srcCollection, tgtCollection, batch_size, output_file, check_target, sample_size_percent, sampling_timeout_ms):
-    src_count = srcCollection.count_documents({})
-    trg_count = tgtCollection.count_documents({})
+    try:
+        src_count = srcCollection.count({})
+        trg_count = tgtCollection.count({})
+    except:
+        src_count = srcCollection.count_documents({})
+        trg_count = tgtCollection.count_documents({})
 
     if src_count == 0:
         print("No documents found in the source collection, please re-check you selected the right source collection.")

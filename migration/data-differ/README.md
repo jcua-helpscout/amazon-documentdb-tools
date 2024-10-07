@@ -1,5 +1,7 @@
 # Amazon DocumentDB DataDiffer Tool
 
+** Note: The source is a MongoDB 3.4.24 and the target is a AWS DocumentDB 3.6.0.
+
 The purpose of the DataDiffer tool is to facilitate the validation of data consistency by comparing two collections, making it particularly useful in migration scenarios.
 This tool performs the following checks:
 
@@ -9,10 +11,15 @@ This tool performs the following checks:
 
 ## Prerequisites:
 
- - Python 3
+ - Python 3.8
  - Modules: pymongo, deepdiff, tqdm
+ - DocumentDB - disable the TLS
 ```
-  pip3 install pymongo deepdiff tqdm
+  "/opt/homebrew/Cellar/python@3.8/3.8.18_2/bin/python3.8" -m venv venv_3_8
+  . venv_3_8/bin/activate
+  pip freeze    # should be empty for now
+  pip install pymongo==3.6.0 deepdiff==8.0.1 tqdm==4.66.5 orderly-set==5.2.2
+  wget https://truststore.pki.rds.amazonaws.com/global/global-bundle.pem
 ```
 Note: Refer to the DeepDiff [documentation](https://zepworks.com/deepdiff/current/optimizations.html) for potential optimizations you may try out specifically for your dataset.
 
@@ -20,7 +27,7 @@ Note: Refer to the DeepDiff [documentation](https://zepworks.com/deepdiff/curren
 
 1. Clone the repository and go to the tool folder:
 ```
-git clone https://github.com/awslabs/amazon-documentdb-tools.git
+git clone https://github.com/jcua-helpscout/amazon-documentdb-tools
 cd amazon-documentdb-tools/migration/data-differ/
 ```
 
@@ -65,12 +72,13 @@ From the source uri, compare the collection *mysourcecollection* from database *
 
 ```
 python3 data-differ-args.py \
---source-uri "mongodb://user:password@mongodb-instance-hostname:27017/admin?directConnection=true" \
---target-uri "mongodb://user:password@target.cluster.docdb.amazonaws.com:27017/?tls=true&tlsCAFile=rds-combined-ca-bundle.pem&replicaSet=rs0&readPreference=secondaryPreferred&retryWrites=false" \
+--source-uri "mongodb://user:password@mongodb-instance-hostname:27017" \
+--target-uri "mongodb://user:password@target.cluster.docdb.amazonaws.com:27017/?ssl=true&ssl_ca_certs=global-bundle.pem&replicaSet=rs0&readPreference=secondaryPreferred&retryWrites=false" \
 --source-db mysourcedb \
 --source-coll mysourcecollection \
 --target-db mytargetdb \
---target-coll mytargetcollection
+--target-coll mytargetcollection \
+--sample_size_percent 1
 ```
 
 For more information on the connection string format, refer to the [documentation](https://www.mongodb.com/docs/manual/reference/connection-string/).
